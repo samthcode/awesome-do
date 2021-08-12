@@ -83,6 +83,10 @@
   }
 </script>
 
+<svelte:head>
+  <title>AwesomeDo</title>
+</svelte:head>
+
 <header>
   <h1 class="header__title">
     <span class="green">Awesome</span><span class="dark-green">Do</span>
