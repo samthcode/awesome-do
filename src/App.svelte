@@ -19,6 +19,13 @@
       completed: false,
       title: "Eat some food",
     },
+    {
+      id: uid++,
+      completed: false,
+      title:
+        "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Blanditiis sint ratione facilis, natus cum labore eos quasi eum porro. Quam, est natus repellat ab ipsam ut accusamus tempore necessitatibus, perspiciatis, temporibus dicta iure! Necessitatibus, dignissimos nisi, accusantium corrupti illum culpa libero debitis ratione veritatis maiores quae sit ipsa iste consequuntur?",
+      description: "Hello world",
+    },
   ];
 
   function removeTodo(id) {
@@ -39,10 +46,7 @@
   function addTodo(event) {
     if (event.code !== "Enter") return;
     if (newTitle === "") {
-      if (titleBox) {
-        titleBox.focus();
-      }
-      return;
+      newTitle = "New Todo";
     }
     let newTodo = {
       id: uid++,
@@ -61,6 +65,21 @@
   function focusOnDesc(event) {
     if (event.code !== "Enter" || !descBox) return;
     descBox.focus();
+  }
+
+  let filterValue = "all";
+
+  let todosToShow = [...todos];
+
+  $: switch (filterValue) {
+    case "all":
+      todosToShow = [...todos];
+      break;
+    case "todo":
+      todosToShow = todos.filter((e) => e.completed);
+      break;
+    case "completed":
+      todosToShow = todos.filter((e) => !e.completed);
   }
 </script>
 
@@ -87,6 +106,12 @@
     class="add-todo-desc"
     bind:this={descBox}
   />
+  Filter todos by:
+  <select class="filter-todos" bind:value={filterValue}>
+    <option value="all">All</option>
+    <option value="todo">To Do</option>
+    <option value="completed">Completed</option>
+  </select>
   {#if todos.length === 0 || todos.every((e) => e.completed)}
     <div class="congrats">
       <h2 class="congrats__title">
@@ -97,8 +122,9 @@
       </div>
     </div>
   {/if}
-  {#each todos as todo}
+  {#each todosToShow as todo}
     <div class="todo">
+      <div class="todo__border-left" />
       <input
         type="checkbox"
         class="todo__checkbox"
@@ -159,9 +185,21 @@
     padding-inline: 2em;
   }
 
+  .add-todo {
+    margin-bottom: 0.25em;
+    width: 30em;
+    max-width: 50%;
+  }
+
   .add-todo-desc {
-    margin-bottom: 1em;
+    margin-bottom: 0.25em;
     display: block;
+    width: 30em;
+    max-width: 50%;
+  }
+
+  .filter-todos {
+    margin-bottom: 1em;
   }
 
   .completed {
@@ -174,11 +212,12 @@
     /* border: 1px solid grey; */
     border-radius: 5px;
     display: grid;
-    grid-template-columns: 2em 1em auto 2em;
-    grid-template-rows: 2em auto;
+    grid-template-columns: min-content 1em auto 2em;
+    grid-template-rows: auto auto;
     grid-template-areas:
-      "checkbox . title remove"
-      "checkbox . description remove";
+      "left-border checkbox title remove"
+      "left-border checkbox description remove";
+    grid-column-gap: 1em;
   }
 
   .todo + .todo {
@@ -193,6 +232,15 @@
     grid-area: title;
     display: flex;
     align-items: center;
+    word-wrap: break-word;
+    word-break: break-all;
+  }
+
+  .todo__border-left {
+    grid-area: left-border;
+    width: 0.1em;
+    border-radius: 2px;
+    background-color: green;
   }
 
   .todo__checkbox {
@@ -200,10 +248,16 @@
     max-width: 1em;
   }
 
+  .todo__checkbox:hover {
+    cursor: pointer;
+  }
+
   .todo__description {
     grid-area: description;
     font-size: 0.85rem;
     /* margin-left: 1em; */
+    word-wrap: break-word;
+    word-break: break-all;
   }
 
   .todo__remove {
@@ -213,6 +267,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    max-height: 2em;
   }
 
   .congrats {
