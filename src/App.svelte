@@ -76,10 +76,10 @@
       todosToShow = [...todos];
       break;
     case "todo":
-      todosToShow = todos.filter((e) => e.completed);
+      todosToShow = todos.filter((e) => !e.completed);
       break;
     case "completed":
-      todosToShow = todos.filter((e) => !e.completed);
+      todosToShow = todos.filter((e) => e.completed);
   }
 </script>
 
