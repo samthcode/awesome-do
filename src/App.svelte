@@ -1,38 +1,13 @@
 <script>
-  let uid = 1;
-  let todos = [
-    {
-      id: uid++,
-      completed: true,
-      title: "Open the best todo-list web-app in the world!",
-      description:
-        "Type your todo in the box above to begin improving your productivity.",
-    },
-    {
-      id: uid++,
-      completed: false,
-      title: "Go shopping",
-      description: "Go shopping and get some stuff.",
-    },
-    {
-      id: uid++,
-      completed: false,
-      title: "Eat some food",
-    },
-    {
-      id: uid++,
-      completed: false,
-      title:
-        "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Blanditiis sint ratione facilis, natus cum labore eos quasi eum porro. Quam, est natus repellat ab ipsam ut accusamus tempore necessitatibus, perspiciatis, temporibus dicta iure! Necessitatibus, dignissimos nisi, accusantium corrupti illum culpa libero debitis ratione veritatis maiores quae sit ipsa iste consequuntur?",
-      description: "Hello world",
-    },
-  ];
+  import { todos, unsubscribe } from "./stores.js";
+  import { onDestroy } from "svelte";
+  onDestroy(unsubscribe); // Prevent memory leaks
 
   function removeTodo(id) {
-    let index = todos.indexOf(todos.find((e) => e.id === id));
+    let index = $todos.indexOf($todos.find((e) => e.id === id));
     if (index > -1) {
-      todos.splice(index, 1);
-      todos = todos;
+      $todos.splice(index, 1);
+      $todos = $todos;
     } else {
       console.error(`Error - removeTodo(): Could not find todo with id ${id}`);
     }
@@ -49,12 +24,12 @@
       newTitle = "New Todo";
     }
     let newTodo = {
-      id: uid++,
+      id: Math.floor(Math.random() * 100000000),
       completed: false,
       title: newTitle,
       description: newDescription,
     };
-    todos = [...todos, newTodo];
+    $todos = [...$todos, newTodo];
     newTitle = "";
     newDescription = "";
     if (titleBox) {
@@ -69,17 +44,17 @@
 
   let filterValue = "all";
 
-  let todosToShow = [...todos];
+  let todosToShow = [...$todos];
 
   $: switch (filterValue) {
     case "all":
-      todosToShow = [...todos];
+      todosToShow = [...$todos];
       break;
     case "todo":
-      todosToShow = todos.filter((e) => !e.completed);
+      todosToShow = $todos.filter((e) => !e.completed);
       break;
     case "completed":
-      todosToShow = todos.filter((e) => e.completed);
+      todosToShow = $todos.filter((e) => e.completed);
   }
 </script>
 
@@ -116,7 +91,7 @@
     <option value="todo">To Do</option>
     <option value="completed">Completed</option>
   </select>
-  {#if todos.length === 0 || todos.every((e) => e.completed)}
+  {#if $todos.length === 0 || $todos.every((e) => e.completed)}
     <div class="congrats">
       <h2 class="congrats__title">
         Well done! You have completed every Todo for today!
@@ -133,6 +108,11 @@
         type="checkbox"
         class="todo__checkbox"
         bind:checked={todo.completed}
+        on:change={(e) => {
+          $todos.filter((val) => val.id === todo.id)[0].completed =
+            e.target.checked;
+          $todos = $todos;
+        }}
       />
       <span class="todo__title" class:completed={todo.completed}
         >{todo.title}</span
