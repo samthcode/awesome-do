@@ -13,6 +13,7 @@
       return;
     }
 
+    // Add an event to be listened to by the parent
     dispatch("submit", { title, desc });
 
     title = "";
