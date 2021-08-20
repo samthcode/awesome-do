@@ -1,4 +1,5 @@
 <script>
+  import TodoForm from "./components/TodoForm.svelte";
   import { todos, unsubscribe } from "./stores.js";
   import { onDestroy } from "svelte";
   onDestroy(unsubscribe); // Prevent memory leaks
@@ -13,33 +14,14 @@
     }
   }
 
-  let newTitle = "";
-  let newDescription = "";
-  let titleBox = undefined;
-  let descBox = undefined;
-
-  function addTodo(event) {
-    if (event.code !== "Enter") return;
-    if (newTitle === "") {
-      newTitle = "New Todo";
-    }
+  function addTodo({ title, desc }) {
     let newTodo = {
       id: Math.floor(Math.random() * 100000000),
       completed: false,
-      title: newTitle,
-      description: newDescription,
+      title,
+      description: desc,
     };
     $todos = [...$todos, newTodo];
-    newTitle = "";
-    newDescription = "";
-    if (titleBox) {
-      titleBox.focus();
-    }
-  }
-
-  function focusOnDesc(event) {
-    if (event.code !== "Enter" || !descBox) return;
-    descBox.focus();
   }
 
   let filterValue = "all";
@@ -69,22 +51,7 @@
   <div class="header__body">The best Todo App, made in Britain</div>
 </header>
 <main>
-  <input
-    type="text"
-    bind:value={newTitle}
-    placeholder="Add a task!"
-    on:keydown={focusOnDesc}
-    class="add-todo"
-    bind:this={titleBox}
-  />
-  <input
-    type="textarea"
-    bind:value={newDescription}
-    placeholder="Task description"
-    on:keydown={addTodo}
-    class="add-todo-desc"
-    bind:this={descBox}
-  />
+  <TodoForm on:submit={(e) => addTodo(e.detail)} />
   Filter todos by:
   <select class="filter-todos" bind:value={filterValue}>
     <option value="all">All</option>
@@ -169,19 +136,6 @@
     padding-inline: 2em;
   }
 
-  .add-todo {
-    margin-bottom: 0.25em;
-    width: 30em;
-    max-width: 50%;
-  }
-
-  .add-todo-desc {
-    margin-bottom: 0.25em;
-    display: block;
-    width: 30em;
-    max-width: 50%;
-  }
-
   .filter-todos {
     margin-bottom: 1em;
   }
@@ -200,7 +154,7 @@
     grid-template-rows: auto auto;
     grid-template-areas:
       "left-border checkbox title remove"
-      "left-border checkbox description remove";
+      "left-border . description remove";
     grid-column-gap: 1em;
   }
 
@@ -218,6 +172,7 @@
     align-items: center;
     word-wrap: break-word;
     word-break: break-all;
+    font-weight: bold;
   }
 
   .todo__border-left {
@@ -242,6 +197,7 @@
     /* margin-left: 1em; */
     word-wrap: break-word;
     word-break: break-all;
+    white-space: pre;
   }
 
   .todo__remove {
