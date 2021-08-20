@@ -1,13 +1,14 @@
 import { writable } from "svelte/store";
+let stored = localStorage.getItem("todos");
 let todosJSON;
-try {
-  todosJSON = JSON.parse(localStorage.getItem("todos"));
-} catch (error) {
-  console.error(
-    `Error parsing todos JSON: "${error}". JSON: "${localStorage.getItem(
-      "todos"
-    )}"`
-  );
+if (stored) {
+  try {
+    todosJSON = JSON.parse(stored);
+  } catch (error) {
+    console.error(`Error parsing todos JSON: "${error}". JSON: "${stored}"`);
+    todosJSON = [];
+  }
+} else {
   todosJSON = [
     {
       id: Math.floor(Math.random() * 100000000),
