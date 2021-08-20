@@ -197,7 +197,7 @@
     /* margin-left: 1em; */
     word-wrap: break-word;
     word-break: break-all;
-    white-space: pre;
+    white-space: pre-wrap;
   }
 
   .todo__remove {
