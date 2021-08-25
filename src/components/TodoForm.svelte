@@ -28,7 +28,7 @@
   on:keydown={sendTodo}
   class="title"
 />
-<button class="submit" on:click={() => sendTodo("button")}> Ok </button>
+<button class="btn submit" on:click={() => sendTodo("button")}> Ok </button>
 <textarea
   type="text"
   bind:value={desc}

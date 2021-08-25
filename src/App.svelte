@@ -36,6 +36,14 @@
     $todos = [...$todos, newTodo];
   }
 
+  function removeAll() {
+    $todos = [];
+  }
+
+  function removeCompleted() {
+    $todos = $todos.filter((e) => !e.completed);
+  }
+
   let filterValue = "all";
 
   let todosToShow = [...$todos];
@@ -72,6 +80,9 @@
     <option value="todo">To Do</option>
     <option value="completed">Completed</option>
   </select>
+  <button class="btn btn-ok" on:click={removeCompleted}>Remove Completed</button
+  >
+  <button class="btn btn-warning" on:click={removeAll}>Remove All</button>
 </div>
 <main>
   {#if $todos.length === 0 || $todos.every((e) => e.completed)}
@@ -96,10 +107,26 @@
     --clr-green: green;
     --clr-dark-green: darkgreen;
     --clr-accent: #efefef;
+    --clr-accent-dark: rgb(204, 199, 199);
   }
   :global(*) {
     margin: 0;
     box-sizing: border-box;
+  }
+
+  :global(.btn) {
+    border-radius: 0.5em;
+    border: 0.02em solid var(--clr-accent-dark);
+  }
+
+  :global(.btn-ok) {
+    background: var(--clr-green);
+    color: white;
+  }
+
+  :global(.btn-warning) {
+    background: red;
+    color: white;
   }
 
   span.green {
