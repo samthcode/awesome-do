@@ -1,8 +1,18 @@
 <script>
+  import { v4 as uuidGeneratorV4 } from "uuid";
   import TodoForm from "./components/TodoForm.svelte";
   import { todos, unsubscribe } from "./stores.js";
-  import { onDestroy } from "svelte";
+  import { onDestroy, onMount } from "svelte";
   onDestroy(unsubscribe); // Prevent memory leaks
+  onMount(() => {
+    if (localStorage.getItem("hasVisitedSinceIdUpdate") === null) {
+      $todos.forEach((i) => {
+        i.id = uuidGeneratorV4();
+      });
+
+      localStorage.setItem("hasVisitedSinceIdUpdate", true);
+    }
+  });
 
   function removeTodo(id) {
     let index = $todos.indexOf($todos.find((e) => e.id === id));
@@ -16,7 +26,7 @@
 
   function addTodo({ title, desc }) {
     let newTodo = {
-      id: Math.floor(Math.random() * 100000000),
+      id: uuidGeneratorV4(),
       completed: false,
       title,
       description: desc,
@@ -38,6 +48,8 @@
     case "completed":
       todosToShow = $todos.filter((e) => e.completed);
   }
+
+  $: console.log(todosToShow);
 </script>
 
 <svelte:head>
