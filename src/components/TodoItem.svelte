@@ -24,10 +24,10 @@
       $todos = $todos;
     }}
   />
-  <span class="title" class:completed>{title}</span>
+  <span class="title wrappable" class:completed>{title}</span>
   <button on:click={remove} class="remove">X</button>
 
-  <div class:completed class="description">
+  <div class:completed class="description wrappable">
     {#if description}
       {description}
     {/if}
@@ -59,8 +59,6 @@
     grid-area: title;
     display: flex;
     align-items: center;
-    word-wrap: break-word;
-    word-break: break-all;
     font-weight: bold;
   }
 
@@ -85,8 +83,6 @@
     grid-area: description;
     font-size: 0.85rem;
     /* margin-left: 1em; */
-    word-wrap: break-word;
-    word-break: break-all;
     white-space: pre-wrap;
   }
 
@@ -100,5 +96,25 @@
     max-height: 2em;
     margin: auto 0;
     border-radius: 50%;
+  }
+
+  .wrappable {
+    /* CREDIT https://css-tricks.com/snippets/css/prevent-long-urls-from-breaking-out-of-container/ */
+
+    /* These are technically the same, but use both */
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+
+    -ms-word-break: break-all;
+    /* This is the dangerous one in WebKit, as it breaks things wherever */
+    word-break: break-all;
+    /* Instead use this non-standard one: */
+    word-break: break-word;
+
+    /* Adds a hyphen where the word breaks, if supported (No Blink) */
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
   }
 </style>
