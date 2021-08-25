@@ -1,6 +1,7 @@
 <script>
   import { v4 as uuidGeneratorV4 } from "uuid";
   import TodoForm from "./components/TodoForm.svelte";
+  import TodoItem from "./components/TodoItem.svelte";
   import { todos, unsubscribe } from "./stores.js";
   import { onDestroy, onMount } from "svelte";
   onDestroy(unsubscribe); // Prevent memory leaks
@@ -14,7 +15,8 @@
     }
   });
 
-  function removeTodo(id) {
+  function removeTodo(e) {
+    let id = e.detail;
     let index = $todos.indexOf($todos.find((e) => e.id === id));
     if (index > -1) {
       $todos.splice(index, 1);
@@ -84,32 +86,7 @@
   {/if}
   {#each todosToShow as todo}
     <div class="todo">
-      <div class="todo__border-left" />
-      <input
-        type="checkbox"
-        class="todo__checkbox"
-        bind:checked={todo.completed}
-        on:change={(e) => {
-          $todos.filter((val) => val.id === todo.id)[0].completed =
-            e.target.checked;
-          $todos = $todos;
-        }}
-      />
-      <span class="todo__title" class:completed={todo.completed}
-        >{todo.title}</span
-      >
-      <button
-        on:click={() => {
-          removeTodo(todo.id);
-        }}
-        class="todo__remove">X</button
-      >
-
-      <div class:completed={todo.completed} class="todo__description">
-        {#if todo.description}
-          {todo.description}
-        {/if}
-      </div>
+      <TodoItem {...todo} on:remove={removeTodo} />
     </div>
   {/each}
 </main>
@@ -167,79 +144,12 @@
 
   /* TODO ITEMS */
 
-  .completed {
-    text-decoration: line-through;
-    font-style: italic;
-    opacity: 0.7;
-  }
-
-  .todo {
-    /* border: 1px solid grey; */
-    border-radius: 5px;
-    background: var(--clr-accent);
-    padding: 0.5em;
-    display: grid;
-    grid-template-columns: min-content 1em auto 2em;
-    grid-template-rows: auto auto;
-    grid-template-areas:
-      "left-border checkbox title remove"
-      "left-border checkbox description remove";
-    grid-column-gap: 1em;
-  }
-
   .todo + .todo {
     margin-top: 1em;
   }
 
   .todo:last-of-type {
     margin-bottom: 1em;
-  }
-
-  .todo__title {
-    grid-area: title;
-    display: flex;
-    align-items: center;
-    word-wrap: break-word;
-    word-break: break-all;
-    font-weight: bold;
-  }
-
-  .todo__border-left {
-    grid-area: left-border;
-    width: 0.1em;
-    border-radius: 2px;
-    background-color: green;
-  }
-
-  .todo__checkbox {
-    grid-area: checkbox;
-    max-width: 2em;
-    margin: auto 0;
-  }
-
-  .todo__checkbox:hover {
-    cursor: pointer;
-  }
-
-  .todo__description {
-    grid-area: description;
-    font-size: 0.85rem;
-    /* margin-left: 1em; */
-    word-wrap: break-word;
-    word-break: break-all;
-    white-space: pre-wrap;
-  }
-
-  .todo__remove {
-    grid-area: remove;
-    /* height: 1.75em; */
-    /* line-height: 0em; */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    max-height: 2em;
-    margin: auto 0;
-    border-radius: 50%;
   }
 
   /* ALL TASKS COMPLETED */
