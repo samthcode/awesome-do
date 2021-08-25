@@ -239,6 +239,7 @@
     justify-content: center;
     max-height: 2em;
     margin: auto 0;
+    border-radius: 50%;
   }
 
   /* ALL TASKS COMPLETED */
