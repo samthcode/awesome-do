@@ -52,5 +52,6 @@
 
   .submit {
     display: inline-block;
+    border-radius: 50%;
   }
 </style>

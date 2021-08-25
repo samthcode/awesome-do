@@ -50,7 +50,7 @@
   </h1>
   <div class="header__body">The best Todo App, made in Britain</div>
 </header>
-<main>
+<div class="options">
   <TodoForm on:submit={(e) => addTodo(e.detail)} />
   Filter todos by:
   <select class="filter-todos" bind:value={filterValue}>
@@ -58,6 +58,8 @@
     <option value="todo">To Do</option>
     <option value="completed">Completed</option>
   </select>
+</div>
+<main>
   {#if $todos.length === 0 || $todos.every((e) => e.completed)}
     <div class="congrats">
       <h2 class="congrats__title">
@@ -101,11 +103,12 @@
 </main>
 
 <style>
-  :root {
+  :global(:root) {
     --clr-green: green;
     --clr-dark-green: darkgreen;
+    --clr-accent: #efefef;
   }
-  * {
+  :global(*) {
     margin: 0;
     box-sizing: border-box;
   }
@@ -119,13 +122,12 @@
   }
 
   header {
-    background-color: #efefef;
+    background-color: var(--clr-accent);
     height: 100px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     padding-inline: 2em;
-    margin-bottom: 1.5em;
   }
 
   .header__body {
@@ -140,6 +142,19 @@
     margin-bottom: 1em;
   }
 
+  /* OPTIONS */
+
+  .options {
+    width: 100%;
+    background: var(--clr-accent);
+    margin-bottom: 1.5em;
+    padding-inline: 2em;
+    border-bottom-left-radius: 2em;
+    border-bottom-right-radius: 2em;
+  }
+
+  /* TODO ITEMS */
+
   .completed {
     text-decoration: line-through;
     font-style: italic;
@@ -149,12 +164,14 @@
   .todo {
     /* border: 1px solid grey; */
     border-radius: 5px;
+    background: var(--clr-accent);
+    padding: 0.5em;
     display: grid;
     grid-template-columns: min-content 1em auto 2em;
     grid-template-rows: auto auto;
     grid-template-areas:
       "left-border checkbox title remove"
-      "left-border . description remove";
+      "left-border checkbox description remove";
     grid-column-gap: 1em;
   }
 
@@ -184,7 +201,8 @@
 
   .todo__checkbox {
     grid-area: checkbox;
-    max-width: 1em;
+    max-width: 2em;
+    margin: auto 0;
   }
 
   .todo__checkbox:hover {
@@ -208,7 +226,10 @@
     align-items: center;
     justify-content: center;
     max-height: 2em;
+    margin: auto 0;
   }
+
+  /* ALL TASKS COMPLETED */
 
   .congrats {
     margin-bottom: 1em;
