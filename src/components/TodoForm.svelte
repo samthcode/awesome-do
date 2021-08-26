@@ -3,15 +3,14 @@
 
   let dispatch = createEventDispatcher();
 
+  export let prompt = "Add a task!";
+  export let descPrompt = "Task description";
+
   let title = "";
   let desc = "";
 
   function sendTodo(e) {
     if (e !== "button" && e.code !== "Enter") return;
-
-    if (!title) {
-      return;
-    }
 
     // Add an event to be listened to by the parent
     dispatch("submit", { title, desc });
@@ -24,17 +23,12 @@
 <input
   type="text"
   bind:value={title}
-  placeholder="Add a task!"
+  placeholder={prompt}
   on:keydown={sendTodo}
   class="title"
 />
 <button class="btn submit" on:click={() => sendTodo("button")}> Ok </button>
-<textarea
-  type="text"
-  bind:value={desc}
-  placeholder="Task description"
-  class="desc"
-/>
+<textarea type="text" bind:value={desc} placeholder={descPrompt} class="desc" />
 
 <style>
   .title {

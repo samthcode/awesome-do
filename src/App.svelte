@@ -2,6 +2,7 @@
   import { v4 as uuidGeneratorV4 } from "uuid";
   import TodoForm from "./components/TodoForm.svelte";
   import TodoItem from "./components/TodoItem.svelte";
+  import Header from "./components/Header.svelte";
   import { todos, unsubscribe } from "./stores.js";
   import { onDestroy, onMount } from "svelte";
   onDestroy(unsubscribe); // Prevent memory leaks
@@ -15,18 +16,63 @@
     }
   });
 
+  function getTodoByID(id) {
+    let todo = $todos.filter((i) => i.id === editingID)[0];
+    return todo ? todo : null;
+  }
+
+  let editing = false;
+  let editingID;
+
+  function resetEditing() {
+    editing = false;
+    editingID = null;
+  }
+
+  function startEdit(e) {
+    editing = true;
+    editingID = e.detail;
+  }
+
+  function editTodo(e) {
+    let { title, desc } = e.detail;
+    // console.log(`title: ${title} desc: ${desc}`);
+    if (!editing || !editingID) return;
+
+    let todo = getTodoByID(editingID);
+    if (!todo) {
+      console.error(
+        `Error - editTodo(): Could not find todo with id ${editingID}`
+      );
+      return;
+    }
+    if (title) todo.title = title;
+    if (desc) todo.description = desc;
+
+    $todos = $todos;
+
+    resetEditing();
+  }
+
   function removeTodo(e) {
     let id = e.detail;
     let index = $todos.indexOf($todos.find((e) => e.id === id));
     if (index > -1) {
       $todos.splice(index, 1);
       $todos = $todos;
+      if (id === editingID) {
+        resetEditing();
+      }
     } else {
       console.error(`Error - removeTodo(): Could not find todo with id ${id}`);
     }
   }
 
   function addTodo({ title, desc }) {
+    if (!title) {
+      return;
+    }
+
     let newTodo = {
       id: uuidGeneratorV4(),
       completed: false,
@@ -38,9 +84,13 @@
 
   function removeAll() {
     $todos = [];
+    resetEditing();
   }
 
   function removeCompleted() {
+    if ($todos.filter((e) => e.completed).some((i) => i.id === editingID)) {
+      resetEditing();
+    }
     $todos = $todos.filter((e) => !e.completed);
   }
 
@@ -58,22 +108,23 @@
     case "completed":
       todosToShow = $todos.filter((e) => e.completed);
   }
-
-  $: console.log(todosToShow);
 </script>
 
 <svelte:head>
   <title>AwesomeDo</title>
 </svelte:head>
 
-<header>
-  <h1 class="header__title">
-    <span class="green">Awesome</span><span class="dark-green">Do</span>
-  </h1>
-  <div class="header__body">The best Todo App, made in Britain</div>
-</header>
+<Header />
 <div class="options">
-  <TodoForm on:submit={(e) => addTodo(e.detail)} />
+  {#if editing}
+    <TodoForm
+      on:submit={editTodo}
+      prompt="Edit your todo..."
+      descPrompt="Edit your description..."
+    />
+  {:else}
+    <TodoForm on:submit={(e) => addTodo(e.detail)} />
+  {/if}
   Filter todos by:
   <select class="filter-todos" bind:value={filterValue}>
     <option value="all">All</option>
@@ -82,7 +133,8 @@
   </select>
   <button class="btn btn-ok" on:click={removeCompleted}>Remove Completed</button
   >
-  <button class="btn btn-warning" on:click={removeAll}>Remove All</button>
+  <button class="btn btn-warning rm-all" on:click={removeAll}>Remove All</button
+  >
 </div>
 <main>
   {#if $todos.length === 0 || $todos.every((e) => e.completed)}
@@ -90,14 +142,20 @@
       <h2 class="congrats__title">
         Well done! You have completed every Todo for today!
       </h2>
-      <div class="congrats__body">
+      <div class="little">
         Why not go for a walk, or simply relax in front of the telly.
       </div>
     </div>
   {/if}
+  {#if todosToShow.length === 0}
+    <span class="little">
+      There are currently no tasks in this filter group. Try switching to
+      another to see your tasks!
+    </span>
+  {/if}
   {#each todosToShow as todo}
     <div class="todo">
-      <TodoItem {...todo} on:remove={removeTodo} />
+      <TodoItem {...todo} on:remove={removeTodo} on:edit={startEdit} />
     </div>
   {/each}
 </main>
@@ -129,25 +187,12 @@
     color: white;
   }
 
-  span.green {
+  :global(span.green) {
     color: var(--clr-green);
   }
 
-  span.dark-green {
+  :global(span.dark-green) {
     color: var(--clr-dark-green);
-  }
-
-  header {
-    background-color: var(--clr-accent);
-    height: 100px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding-inline: 2em;
-  }
-
-  .header__body {
-    font-weight: 600;
   }
 
   main {
@@ -156,6 +201,7 @@
 
   .filter-todos {
     margin-bottom: 1em;
+    margin-top: 1em;
   }
 
   /* OPTIONS */
@@ -167,6 +213,10 @@
     padding-inline: 2em;
     border-bottom-left-radius: 2em;
     border-bottom-right-radius: 2em;
+  }
+
+  .rm-all {
+    margin-bottom: 1em;
   }
 
   /* TODO ITEMS */
@@ -190,7 +240,8 @@
     font-size: 20px;
   }
 
-  .congrats__body {
+  .little {
+    font-size: 15px;
     font-style: italic;
   }
 </style>

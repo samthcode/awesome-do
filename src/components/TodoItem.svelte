@@ -11,6 +11,10 @@
   function remove() {
     dispatch("remove", id);
   }
+
+  function edit() {
+    dispatch("edit", id);
+  }
 </script>
 
 <div class="todo">
@@ -25,7 +29,8 @@
     }}
   />
   <span class="title wrappable" class:completed>{title}</span>
-  <button on:click={remove} class="remove">X</button>
+  <button on:click={remove} class="remove btn-warning">X</button>
+  <button class="btn edit" on:click={edit}>Edit</button>
 
   <div class:completed class="description wrappable">
     {#if description}
@@ -41,12 +46,17 @@
     background: var(--clr-accent);
     padding: 0.5em;
     display: grid;
-    grid-template-columns: min-content 1em auto 2em;
+    grid-template-columns: min-content 1em auto 2.5em;
     grid-template-rows: auto auto;
     grid-template-areas:
       "left-border checkbox title remove"
-      "left-border checkbox description remove";
-    grid-column-gap: 1em;
+      "left-border checkbox description edit";
+    grid-gap: 0.75em;
+  }
+
+  .edit {
+    grid-area: edit;
+    margin: auto auto;
   }
 
   .completed {
@@ -94,7 +104,9 @@
     align-items: center;
     justify-content: center;
     max-height: 2em;
-    margin: auto 0;
+    max-width: 2em;
+    width: 2em;
+    margin: auto auto;
     border-radius: 50%;
   }
 
