@@ -21,6 +21,14 @@
     return todo ? todo : null;
   }
 
+  function idOrError(id) {
+    let todo = getTodoByID(id);
+    if (!todo) {
+      console.error(`Error - idOrError(): Could not find todo with id ${id}`);
+    }
+    return todo;
+  }
+
   let editing = false;
   let editingID;
 
@@ -39,13 +47,9 @@
     // console.log(`title: ${title} desc: ${desc}`);
     if (!editing || !editingID) return;
 
-    let todo = getTodoByID(editingID);
-    if (!todo) {
-      console.error(
-        `Error - editTodo(): Could not find todo with id ${editingID}`
-      );
-      return;
-    }
+    let todo = idOrError(editingID);
+    if (!todo) return;
+
     if (title) todo.title = title;
     if (desc) todo.description = desc;
 
