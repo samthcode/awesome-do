@@ -5,9 +5,8 @@
 
   export let prompt = "Add a task!";
   export let descPrompt = "Task description";
-
-  let title = "";
-  let desc = "";
+  export let title = "";
+  export let desc = "";
 
   function sendTodo(e) {
     if (e !== "button" && e.code !== "Enter") return;

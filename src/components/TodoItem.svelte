@@ -13,7 +13,7 @@
   }
 
   function edit() {
-    dispatch("edit", id);
+    dispatch("edit", { id, title, description });
   }
 </script>
 

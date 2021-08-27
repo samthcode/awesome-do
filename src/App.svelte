@@ -31,15 +31,22 @@
 
   let editing = false;
   let editingID;
+  let editingOriginalTitle = null;
+  let editingOriginalDesc = null;
 
   function resetEditing() {
     editing = false;
     editingID = null;
+    editingOriginalTitle = null;
+    editingOriginalDesc = null;
   }
 
   function startEdit(e) {
     editing = true;
-    editingID = e.detail;
+    // ({ id, title, description } = e.detail);
+    editingID = e.detail.id;
+    editingOriginalTitle = e.detail.title;
+    editingOriginalDesc = e.detail.description;
   }
 
   function editTodo(e) {
@@ -125,6 +132,8 @@
       on:submit={editTodo}
       prompt="Edit your todo..."
       descPrompt="Edit your description..."
+      title={editingOriginalTitle}
+      desc={editingOriginalDesc}
     />
   {:else}
     <TodoForm on:submit={(e) => addTodo(e.detail)} />
