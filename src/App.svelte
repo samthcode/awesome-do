@@ -80,14 +80,14 @@
   }
 
   function addTodo({ title, desc }) {
-    if (!title) {
+    if (!title && !desc) {
       return;
     }
 
     let newTodo = {
       id: uuidGeneratorV4(),
       completed: false,
-      title,
+      title: title ? title : "New Todo",
       description: desc,
     };
     $todos = [...$todos, newTodo];
