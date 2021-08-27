@@ -33,14 +33,14 @@
   .title {
     margin-bottom: 0.25em;
     width: 30em;
-    max-width: 50%;
+    max-width: 75%;
   }
 
   .desc {
     margin-bottom: 0.25em;
     display: block;
     width: 30em;
-    max-width: 50%;
+    max-width: 75%;
   }
 
   .submit {
