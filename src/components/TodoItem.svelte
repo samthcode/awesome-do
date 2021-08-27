@@ -37,7 +37,7 @@
   <div class:completed class="description wrappable">
     {#if description}
       <SvelteMarkdown
-        source={description}
+        source={description.trim()}
         renderers={{ html: TextMdRenderer }}
       />
     {/if}
