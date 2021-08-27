@@ -51,17 +51,17 @@
     background: var(--clr-accent);
     padding: 0.5em;
     display: grid;
-    grid-template-columns: min-content 1em auto 2.5em;
+    grid-template-columns: min-content 1em auto 2.5em 2.5em;
     grid-template-rows: auto auto;
     grid-template-areas:
-      "left-border checkbox title remove"
-      "left-border checkbox description edit";
+      "left-border checkbox title edit remove"
+      "left-border . description description .";
     grid-gap: 0.75em;
   }
 
   .edit {
     grid-area: edit;
-    margin: auto auto;
+    margin: auto 0;
   }
 
   .completed {
@@ -87,7 +87,8 @@
   .checkbox {
     grid-area: checkbox;
     max-width: 2em;
-    margin: auto 0;
+    max-height: 2em;
+    margin: auto auto;
   }
 
   .checkbox:hover {
