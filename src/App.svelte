@@ -210,6 +210,7 @@
 
   main {
     padding-inline: 2em;
+    padding-bottom: 1em;
   }
 
   .filter-todos {
