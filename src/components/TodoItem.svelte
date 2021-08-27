@@ -35,7 +35,6 @@
 
   <div class:completed class="description wrappable">
     {#if description}
-      // FIXME: Find a sanitizer for svelte
       {@html marked(description)}
     {/if}
   </div>
