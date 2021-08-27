@@ -13,7 +13,8 @@ export let todos = writable(
       id: uuidGeneratorV4(),
       completed: false,
       title: "Go shopping",
-      description: "Go shopping and get some stuff.",
+      description:
+        "Go shopping and get some stuff.\n\n+ Meat\n+ Bread\n+ Cheese\n+ More Cheese",
     },
     {
       id: uuidGeneratorV4(),
