@@ -1,5 +1,4 @@
 <script>
-  import marked from "marked";
   import { todos } from "../stores";
   import { createEventDispatcher } from "svelte";
   export let id;
@@ -35,7 +34,7 @@
 
   <div class:completed class="description wrappable">
     {#if description}
-      {@html marked(description)}
+      {description}
     {/if}
   </div>
 </div>
