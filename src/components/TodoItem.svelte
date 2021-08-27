@@ -1,4 +1,6 @@
 <script>
+  import SvelteMarkdown from "svelte-markdown";
+  import TextMdRenderer from "./TextMDRenderer.svelte";
   import { todos } from "../stores";
   import { createEventDispatcher } from "svelte";
   export let id;
@@ -34,7 +36,10 @@
 
   <div class:completed class="description wrappable">
     {#if description}
-      {description}
+      <SvelteMarkdown
+        source={description}
+        renderers={{ html: TextMdRenderer }}
+      />
     {/if}
   </div>
 </div>
