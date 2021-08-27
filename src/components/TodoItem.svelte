@@ -1,4 +1,5 @@
 <script>
+  import marked from "marked";
   import { todos } from "../stores";
   import { createEventDispatcher } from "svelte";
   export let id;
@@ -34,7 +35,8 @@
 
   <div class:completed class="description wrappable">
     {#if description}
-      {description}
+      // FIXME: Find a sanitizer for svelte
+      {@html marked(description)}
     {/if}
   </div>
 </div>
