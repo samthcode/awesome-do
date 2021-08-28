@@ -1,6 +1,6 @@
 <script>
   import SvelteMarkdown from "svelte-markdown";
-  import TextMdRenderer from "./TextMDRenderer.svelte";
+  import HTMLMDRenderer from "./HTMLMDRenderer.svelte";
   import { todos } from "../stores";
   import { createEventDispatcher } from "svelte";
   export let id;
@@ -38,7 +38,7 @@
     {#if description}
       <SvelteMarkdown
         source={description}
-        renderers={{ html: TextMdRenderer }}
+        renderers={{ html: HTMLMDRenderer }}
       />
     {/if}
   </div>
