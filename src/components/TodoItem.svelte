@@ -34,15 +34,14 @@
   <span class="title wrappable" class:completed>{title}</span>
   <button on:click={remove} class="remove btn-warning">X</button>
   <button class="btn edit" on:click={edit}>Edit</button>
-
-  <div class:completed class="description wrappable">
-    {#if description}
+  {#if description}
+    <div class:completed class="description wrappable">
       <SvelteMarkdown
         source={description}
         renderers={{ html: HTMLMDRenderer, image: ImgMDRenderer }}
       />
-    {/if}
-  </div>
+    </div>
+  {/if}
 </div>
 
 <style>
@@ -57,7 +56,7 @@
     grid-template-areas:
       "left-border checkbox title edit remove"
       "left-border . description description .";
-    grid-gap: 0.75em;
+    grid-column-gap: 0.75em;
   }
 
   .edit {
@@ -101,6 +100,7 @@
     font-size: 0.85rem;
     /* margin-left: 1em; */
     white-space: pre-wrap;
+    margin-top: 0.75em;
   }
 
   .remove {
