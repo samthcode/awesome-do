@@ -1,6 +1,7 @@
 <script>
   import SvelteMarkdown from "svelte-markdown";
   import HTMLMDRenderer from "./HTMLMDRenderer.svelte";
+  import ImgMDRenderer from "./ImgMDRenderer.svelte";
   import { todos } from "../stores";
   import { createEventDispatcher } from "svelte";
   export let id;
@@ -38,7 +39,7 @@
     {#if description}
       <SvelteMarkdown
         source={description}
-        renderers={{ html: HTMLMDRenderer }}
+        renderers={{ html: HTMLMDRenderer, image: ImgMDRenderer }}
       />
     {/if}
   </div>
