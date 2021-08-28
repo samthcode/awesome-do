@@ -57,8 +57,12 @@
     let todo = idOrError(editingID);
     if (!todo) return;
 
-    if (title) todo.title = title;
-    if (desc) todo.description = desc;
+    if (title) {
+      todo.title = title;
+    } else {
+      todo.title = "New Todo";
+    }
+    todo.description = desc;
 
     $todos = $todos;
 
