@@ -6,15 +6,6 @@
   import { todos, unsubscribe } from "./stores.js";
   import { onDestroy, onMount } from "svelte";
   onDestroy(unsubscribe); // Prevent memory leaks
-  onMount(() => {
-    if (localStorage.getItem("hasVisitedSinceIdUpdate") === null) {
-      $todos.forEach((i) => {
-        i.id = uuidGeneratorV4();
-      });
-
-      localStorage.setItem("hasVisitedSinceIdUpdate", true);
-    }
-  });
 
   function getTodoByID(id) {
     let todo = $todos.filter((i) => i.id === editingID)[0];
